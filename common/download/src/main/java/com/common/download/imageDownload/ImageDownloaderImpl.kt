@@ -19,7 +19,7 @@ class ImageDownloaderImpl(
             .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
             .setTitle("$fileName.jpg")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, "Pixabay/Images/$fileName.jpg")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, "PicBook/Images/$fileName.jpg")
 
 
         return downloaderManager.enqueue(request)

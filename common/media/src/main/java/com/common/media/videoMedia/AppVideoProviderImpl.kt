@@ -29,7 +29,7 @@ class AppVideoProviderImpl(
 
         val selection = "${MediaStore.Video.Media.RELATIVE_PATH} == ?"
         val selectionArgs = arrayOf(
-            "Pictures/Pixabay/Videos/"
+            "Pictures/PicBook/Videos/"
         )
 
         val sortOrder = "${MediaStore.Video.Media.DATE_TAKEN} DESC"

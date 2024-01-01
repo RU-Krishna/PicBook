@@ -31,7 +31,7 @@ class AppImageProviderImpl(
         val selection = "${MediaStore.Images.Media.RELATIVE_PATH} == ?"
 
         val selectionArgs = arrayOf(
-            "Pictures/Pixabay/Images/"
+            "Pictures/PicBook/Images/"
         )
 
         val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
