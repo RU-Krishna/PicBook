@@ -1,8 +1,6 @@
 package com.feature.videos.ui
 
-import android.app.DownloadManager
 import android.content.Context
-import android.service.autofill.OnClickAction
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,18 +20,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -70,6 +64,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PortraitVideoViewScreen(
     video: () -> Hits,
+    query: () -> String,
     onBackPress: () -> Unit = {},
     fullScreenMode: () -> Boolean,
     onClickDownload: (String, String) -> Long,
@@ -82,7 +77,8 @@ fun PortraitVideoViewScreen(
     ) {
         item {
             PreviewVideoTopAppBar(
-                onBackPress = onBackPress
+                onBackPress = onBackPress,
+                query = query
             )
             VideoPlayer(
                 modifier = Modifier.wrapContentSize().padding(horizontal = 1.dp, vertical = 1.dp),
@@ -406,12 +402,13 @@ fun ButtonSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewVideoTopAppBar(
-    onBackPress: () -> Unit = {}
+    onBackPress: () -> Unit = {},
+    query: () -> String
 ) {
     TopAppBar(
         title = {
             Text(
-                text = "Krishna",
+                text = query(),
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
                 color = MaterialTheme.colorScheme.onPrimary,

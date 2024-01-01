@@ -61,8 +61,10 @@ import com.feature.images.model.Hits
 
 @Composable
 fun PreviewImage(
-    onBackPress: () -> Unit = {}, hits: Hits = Hits(),
-    onClickDownload: (String, String) -> Long
+    onBackPress: () -> Unit = {},
+    hits: Hits = Hits(),
+    onClickDownload: (String, String) -> Long,
+    query: () -> String
 ) {
 
 // Define mutable state variables to keep track of the scale and offset.
@@ -80,7 +82,8 @@ fun PreviewImage(
             .fillMaxSize()
     ) {
         PreviewImageTopAppBar(
-            onBackPress = onBackPress
+            onBackPress = onBackPress,
+            query = query
         )
         LazyColumn(
             verticalArrangement = Arrangement.Top, modifier = Modifier
@@ -288,12 +291,13 @@ fun DownloadButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewImageTopAppBar(
-    onBackPress: () -> Unit= {}
+    onBackPress: () -> Unit= {},
+    query: () -> String
 ) {
     TopAppBar(
         title = {
             Text(
-                text = "Krishna",
+                text = query(),
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
                 color = MaterialTheme.colorScheme.onPrimary,

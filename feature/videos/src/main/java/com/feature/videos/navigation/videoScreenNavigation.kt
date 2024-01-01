@@ -93,6 +93,7 @@ fun NavGraphBuilder.videoGraph(
 
             PortraitVideoViewScreen(
                 video =  { video },
+                query = { viewModel.searchQuery.value },
                 onBackPress = {
                     navController.popBackStack(
                         route = VideoFeatureNavigation.VideoSearchListScreen.title, inclusive = false

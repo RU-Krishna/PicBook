@@ -65,7 +65,8 @@ fun NavGraphBuilder.imageNavigationGraph(
                     navController.popBackStack(route = ImageFeatureScreens.ImageHomeScreen.screenName, inclusive = false)
                 },
                 hits = hits,
-                onClickDownload = onClickDownload
+                onClickDownload = onClickDownload,
+                query = { viewModel.searchQuery.value }
             )
         }
 
