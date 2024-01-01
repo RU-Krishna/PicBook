@@ -1,0 +1,3 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="apikey" tools:ignore="ExtraTranslation,TypographyDashes">41098871-6aacd977bcc23bce895bfb9a7</string>
+</resources>
