@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.feature.images.R
 import com.feature.images.model.Hits
+import java.util.Locale
 
 @Composable
 fun PreviewImage(
@@ -297,7 +298,8 @@ fun PreviewImageTopAppBar(
     TopAppBar(
         title = {
             Text(
-                text = query(),
+                text = query().replaceFirstChar { if(it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    .ifEmpty { "Images" },
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
                 color = MaterialTheme.colorScheme.onPrimary,

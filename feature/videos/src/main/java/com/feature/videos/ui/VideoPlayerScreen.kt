@@ -44,8 +44,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +62,7 @@ import coil.compose.AsyncImage
 import com.feature.videos.model.Hits
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun PortraitVideoViewScreen(
@@ -239,7 +242,11 @@ fun VideoPlayer(
     ElevatedCard(
         shape = shape,
         modifier = modifier,
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            focusedElevation = 6.dp
+        )
     ) {
         Box {
             AndroidView(
@@ -408,7 +415,8 @@ fun PreviewVideoTopAppBar(
     TopAppBar(
         title = {
             Text(
-                text = query(),
+                text = query().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    .ifEmpty { "Videos" },
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
                 color = MaterialTheme.colorScheme.onPrimary,

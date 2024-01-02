@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,6 +34,7 @@ import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -77,23 +81,23 @@ fun DownloadsScreen(
             mutableStateOf(true)
         }
 
-        DownloadTopSection(
-            selected = selected,
-            onImageSelected = {
-                selected = true
-            },
-            onVideoSelected = {
-                selected = false
-            }
-        )
-        HorizontalDivider(
-            thickness = 2.dp,
-            modifier = Modifier
-                .padding(
-                    horizontal = 2.dp,
-                    vertical = 2.dp
-                )
-        )
+            DownloadTopSection(
+                selected = selected,
+                onImageSelected = {
+                    selected = true
+                },
+                onVideoSelected = {
+                    selected = false
+                }
+            )
+            HorizontalDivider(
+                thickness = 2.dp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 2.dp,
+                        vertical = 2.dp
+                    )
+            )
         AnimatedVisibility(
             visible = selected,
             enter = fadeIn(),
@@ -113,7 +117,10 @@ fun DownloadsScreen(
                 exit = fadeOut()
             ) {
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
                     item {
                     }
                     items(items = imageList(), key = {
@@ -143,7 +150,10 @@ fun DownloadsScreen(
                 exit = fadeOut()
             ) {
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
                     items(items = videoList(), key = {
                         it.id
                     }) {
@@ -177,14 +187,20 @@ fun ImageCard(
             .build()
     }
     ElevatedCard(
-        onClick = { imageViewerIntent(
-            context,
-            uri
-        ) },
+        onClick = {
+            imageViewerIntent(
+                context,
+                uri
+            )
+        },
         modifier = Modifier
             .padding(16.dp)
             .wrapContentSize(),
-        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            focusedElevation = 6.dp
+        ),
         shape = RoundedCornerShape(
             topEnd = 8.dp,
             topStart = 16.dp,
@@ -192,7 +208,7 @@ fun ImageCard(
             bottomStart = 8.dp
         )
     ) {
-        Box() {
+        Box {
             AsyncImage(
                 model = model,
                 contentDescription = "Image",
@@ -230,14 +246,20 @@ fun VideoCard(
     }
 
     ElevatedCard(
-        onClick = { videoViewerIntent(
-            context,
-            uri
-        ) },
+        onClick = {
+            videoViewerIntent(
+                context,
+                uri
+            )
+        },
         modifier = Modifier
             .padding(16.dp)
             .wrapContentSize(),
-        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            focusedElevation = 6.dp
+        ),
         shape = RoundedCornerShape(
             topEnd = 8.dp,
             topStart = 16.dp,

@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.key.Key
@@ -91,7 +93,7 @@ fun MainVideoScreen(
             exit = fadeOut()
         ) {
             EmptyVideoResultScreen(text = query())
-            if(query().isEmpty())
+            if (query().isEmpty())
                 onSearch()
         }
         AnimatedVisibility(
@@ -157,62 +159,71 @@ fun SearchBar(
 
     val focusManager = LocalFocusManager.current
 
-    OutlinedTextField(
-        value = query(),
-        onValueChange = {
-            onQueryChange(it)
-        },
-        shape = AbsoluteRoundedCornerShape(32.dp),
-        placeholder = {
-            Text(
-                text = "Search Videos",
-                fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.SemiBold
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search Videos"
-            )
-        },
-        trailingIcon = {
-            AnimatedVisibility(
-                visible = query().isNotEmpty(),
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                IconButton(onClick = { onQueryChange("") }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.close),
-                        contentDescription = "Erase Query"
-                    )
-                }
-            }
-        },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                focusManager.clearFocus(true)
-                onSearch()
-            }
-        ),
+    Box(
         modifier = Modifier
-            .onKeyEvent {
-                if (it.key == Key.Back) {
-                    focusManager.clearFocus(true)
+            .wrapContentSize()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
+
+    ) {
+        OutlinedTextField(
+            value = query(),
+            onValueChange = {
+                onQueryChange(it)
+            },
+            shape = AbsoluteRoundedCornerShape(32.dp),
+            placeholder = {
+                Text(
+                    text = "Search Videos",
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Videos"
+                )
+            },
+            trailingIcon = {
+                AnimatedVisibility(
+                    visible = query().isNotEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = "Erase Query"
+                        )
+                    }
                 }
-                true
-            }
-            .fillMaxWidth(1f)
-            .padding(vertical = 4.dp, horizontal = 16.dp)
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    focusManager.clearFocus(true)
+                    onSearch()
+                }
+            ),
+            modifier = Modifier
+                .onKeyEvent {
+                    if (it.key == Key.Back) {
+                        focusManager.clearFocus(true)
+                    }
+                    true
+                }
+                .fillMaxWidth(1f)
+                .padding(vertical = 4.dp, horizontal = 8.dp)
 
 
-    )
+        )
+    }
 
 }
 
@@ -261,7 +272,11 @@ fun VideoCard(
             .clickable {
                 onPlayVideo()
             },
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            focusedElevation = 6.dp
+        )
 
     ) {
         Box {

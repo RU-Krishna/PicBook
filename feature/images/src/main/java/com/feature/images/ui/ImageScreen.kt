@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -125,62 +129,68 @@ fun SearchBar(
 
     val focusManager = LocalFocusManager.current
 
-    OutlinedTextField(
-        value = query,
-        onValueChange = {
-            changeQuery(it)
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = "Search Button"
-            )
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Search,
-            keyboardType = KeyboardType.Text
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                focusManager.clearFocus(true)
-                onSearch()
-            }
-        ),
-        singleLine = true,
-        shape = AbsoluteRoundedCornerShape(32.dp),
-        placeholder = {
-            Text(
-                text = "Search Images",
-                fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.SemiBold
-            )
-        },
-        trailingIcon = {
-            AnimatedVisibility(
-                visible = query.isNotEmpty(),
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                IconButton(onClick = { changeQuery("") }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.close),
-                        contentDescription = "Erase Query"
-                    )
-                }
-            }
-        },
-        modifier = Modifier
-            .onKeyEvent {
-                if (it.key == Key.Back) {
+    Box(modifier = Modifier.wrapContentSize()
+        .background(
+            color = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = {
+                changeQuery(it)
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = "Search Button"
+                )
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search,
+                keyboardType = KeyboardType.Text
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
                     focusManager.clearFocus(true)
+                    onSearch()
                 }
-                true
-            }
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            ),
+            singleLine = true,
+            shape = AbsoluteRoundedCornerShape(32.dp),
+            placeholder = {
+                Text(
+                    text = "Search Images",
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
+            trailingIcon = {
+                AnimatedVisibility(
+                    visible = query.isNotEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    IconButton(onClick = { changeQuery("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = "Erase Query"
+                        )
+                    }
+                }
+            },
+            modifier = Modifier
+                .onKeyEvent {
+                    if (it.key == Key.Back) {
+                        focusManager.clearFocus(true)
+                    }
+                    true
+                }
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp)
 
 
-    )
+        )
+    }
 
 
 }
@@ -200,6 +210,7 @@ fun ImageList(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+
     ) {
         items(items = images.hits, key = {
             it.id
@@ -234,7 +245,11 @@ fun ImagePreview(
 
     ElevatedCard(
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            focusedElevation = 6.dp
+        ),
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -270,30 +285,6 @@ fun ImagePreview(
                         .align(Alignment.Center)
                 )
             }
-//            IconButton(
-//                onClick = {
-//
-//                },
-//                modifier = Modifier
-//                    .align(Alignment.BottomEnd)
-//                    .padding(end = 4.dp, bottom = 4.dp)
-//                    .border(
-//                        border = BorderStroke(
-//                            width = 1.dp,
-//                            color = Color.White
-//                        ),
-//                        shape = CircleShape
-//                    )
-//                    .size(32.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Outlined.Favorite,
-//                    contentDescription = "Favorite",
-//                    tint = Color.White,
-//                    modifier = Modifier
-//                        .size(24.dp)
-//                )
-//            }
 
         }
 
