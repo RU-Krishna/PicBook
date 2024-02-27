@@ -1,13 +1,11 @@
 package com.feature.images.ui
 
-import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.feature.images.API
 import com.feature.images.data.ImageRepository
+import com.feature.images.filters.Category
 import com.feature.images.filters.Filters
 import com.feature.images.model.Hits
 import com.feature.images.model.Images
@@ -15,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class ImageViewModel(
     private val imageRepository: ImageRepository,
@@ -41,17 +40,10 @@ class ImageViewModel(
 
 
     init {
-        viewModelScope.async(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             imageList.value = imageRepository.getImages(
                 key = API.KEY, //Add your own API KEy
-                query = listOf(
-                    "Flowers",
-                    "Butterfly",
-                    "Roses",
-                    "Nature",
-                    "Sky",
-                    "Moon"
-                ).random()
+                query = Category.entries.random().cname
             ).execute()
                 .body()!!
 
@@ -64,7 +56,7 @@ class ImageViewModel(
 
     fun getImages() {
 
-        viewModelScope.async(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             imageList.value = imageRepository.getImages(
                 key = API.KEY,  //Add your own API_KEY
                 query = searchQuery.value
@@ -76,6 +68,44 @@ class ImageViewModel(
     fun showImage(hits: Hits) {
         previewImageHits.value = hits
     }
+
+
+
+    fun applyFilter() {
+        viewModelScope.launch(Dispatchers.IO) {
+            imageList.value = imageRepository.getFilteredImages(
+                key = API.KEY,
+                query = searchQuery.value,
+                imageType = filters.value.imageType,
+                category = filters.value.category,
+                orientation = filters.value.orientation,
+                color = filters.value.color,
+                order = filters.value.order,
+                editorsChoice = filters.value.editorsChoice
+            ).execute()
+                .body()!!
+        }
+    }
+
+    fun resetFilter() {
+        filters.value = Filters()
+    }
+
+    fun addMoreImages() {
+        viewModelScope.launch(Dispatchers.IO) {
+            imageList.value.hits += imageRepository.getFilteredImages(
+                key = API.KEY,
+                query = searchQuery.value,
+                imageType = filters.value.imageType,
+                category = filters.value.category,
+                orientation = filters.value.orientation,
+                color = filters.value.color,
+                order = filters.value.order,
+                editorsChoice = filters.value.editorsChoice
+            ).execute().body()!!.hits
+        }
+    }
+
 
 
 

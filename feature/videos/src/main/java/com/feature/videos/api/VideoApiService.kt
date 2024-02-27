@@ -20,7 +20,9 @@ interface VideoApiService {
         @Query("q") q: String,
         @Query("per_page") perPage: Int = 199,
         @Query("video_type") videoType: String = "all",
-        @Query("editors_choice") editorsChoice: Boolean = false
+        @Query("category") category: String = "",
+        @Query("editors_choice") editorsChoice: Boolean = false,
+        @Query("order") order: String = ""
     ): Call<Videos>
 
 }

@@ -20,15 +20,16 @@ import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var networkConnectivity: ConnectivityManager
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -85,9 +86,11 @@ class MainActivity : ComponentActivity() {
             PicBazaarTheme {
 
                 val navController: NavHostController = rememberNavController()
+                
+                val modalBottomSheetState = rememberModalBottomSheetState()
 
 
-                var offlineFeatureAccesibility by remember {
+                var offlineFeatureAccessibility by remember {
                     mutableStateOf(true)
                 }
 
@@ -97,23 +100,23 @@ class MainActivity : ComponentActivity() {
                         BottomBar(
                             navController = navController,
                             featureAvailabilityCallback = {
-                                offlineFeatureAccesibility = true
+                                offlineFeatureAccessibility = true
                             }
                         )
                     }
 
                 ) {
 
-                    if (ReadMediaPermissions()) {
+                    if (readMediaPermissions()) {
 
                         AnimatedVisibility(
-                            visible = NetworkViewModel.networkState.value == NetworkState.UnAvailable && offlineFeatureAccesibility,
+                            visible = NetworkViewModel.networkState.value == NetworkState.UnAvailable && offlineFeatureAccessibility,
                             enter = expandIn(),
                             exit = shrinkOut()
                         ) {
                             NetworkChangeDialog(
                                 onClick = {
-                                    offlineFeatureAccesibility = false
+                                    offlineFeatureAccessibility = false
                                     navController.navigate(FeatureNavigation.Downloads.title) {
                                         popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
@@ -137,13 +140,15 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 viewModel = imageViewModel,
                                 onClickDownload =
-                                ImageDownloaderImpl(this@MainActivity)::downloadImage
+                                ImageDownloaderImpl(this@MainActivity)::downloadImage,
+                                modalBottomSheetState = modalBottomSheetState
                             )
                             videoGraph(
                                 navController = navController,
                                 viewModel = videoViewModel,
                                 context = this@MainActivity,
-                                onClickDownload = VideoDownloaderImpl(this@MainActivity)::downloadVideo
+                                onClickDownload = VideoDownloaderImpl(this@MainActivity)::downloadVideo,
+                                modalBottomSheet = modalBottomSheetState
                             )
                             downloadGraph(
                                 images = imageProvider::getImageData,
@@ -286,7 +291,7 @@ fun BottomBar(
 }
 
 @Composable
-fun ReadMediaPermissions(
+fun readMediaPermissions(
     context: Context = LocalContext.current
 ): Boolean {
 

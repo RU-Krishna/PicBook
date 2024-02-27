@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.feature.videos.API
 import com.feature.videos.data.VideoRepository
+import com.feature.videos.filter.Category
+import com.feature.videos.filter.Filters
 import com.feature.videos.model.Hits
 import com.feature.videos.model.Videos
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +26,9 @@ class VideoViewModel(
     var videoData = mutableStateOf(Hits())
     private set
 
+    var filter = mutableStateOf(Filters())
+    private set
+
     var fullScreenMode = mutableStateOf(false)
     private set
 
@@ -33,13 +38,7 @@ class VideoViewModel(
         ) {
             videos.value = repository.getVideos(
                key = API.KEY,  //ADd your own API KEY
-                q = listOf(
-                    "krishna",
-                    "nature",
-                    "night",
-                    "earth",
-                    "universe"
-                ).random()
+                q = Category.entries.random().cname
             ).execute().body()!!
         }
     }
@@ -51,6 +50,24 @@ class VideoViewModel(
                 q = searchQuery.value
             ).execute().body()!!
         }
+    }
+
+    fun appplyFilter() {
+        viewModelScope.launch(Dispatchers.IO) {
+            videos.value = repository.getFilteredVideos(
+                key = API.KEY,
+                q = searchQuery.value,
+                category = filter.value.category,
+                editorsChoice = filter.value.editorsChoice,
+                videoType = filter.value.videoType,
+                order = filter.value.order
+            ).execute()
+                .body()!!
+        }
+    }
+
+    fun resetFilter() {
+        filter.value = Filters()
     }
 
     fun changeQuery(query: String) {

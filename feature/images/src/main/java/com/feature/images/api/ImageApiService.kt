@@ -20,10 +20,13 @@ internal interface ImageApiService {
         @Query("key") key: String,
         @Query("q") query: String = "Flowers+Nature+Sky+Galaxy+Home+Animals",
         @Query("safesearch") safeSearch: Boolean = true,
-        @Query("image_type") imageType: String = "all",
-        @Query("orientation") orientation: String = "all",
+        @Query("image_type") imageType: String = "",
+        @Query("orientation") orientation: String = "",
         @Query("editors_choice") editorsChoice: Boolean = false,
-        @Query("category") category: String = ""
+        @Query("category") category: String = "",
+        @Query("color") color: String = "",
+        @Query("order") order: String = ""
+
     ): Call<Images>
 
 

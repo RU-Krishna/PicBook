@@ -1,6 +1,9 @@
 package com.feature.images.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
@@ -12,10 +15,12 @@ import com.feature.images.ui.ImageScreen
 import com.feature.images.ui.ImageViewModel
 import com.feature.images.ui.PreviewImage
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.imageNavigationGraph(
     navController: NavController,
     viewModel: ImageViewModel,
-    onClickDownload: (String, String) -> Long
+    onClickDownload: (String, String) -> Long,
+    modalBottomSheetState: SheetState
 ) {
 
     navigation(
@@ -51,7 +56,11 @@ fun NavGraphBuilder.imageNavigationGraph(
                         }
                     }
 
-                }
+                },
+                modalBottomSheetState = modalBottomSheetState,
+                filters = { viewModel.filters.value },
+                applyFilter = viewModel::applyFilter,
+                resetFilter = viewModel::resetFilter
             )
         }
         composable(

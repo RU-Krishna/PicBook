@@ -17,7 +17,9 @@ interface ImageRepository {
         imageType: String,
         orientation: String,
         editorsChoice: Boolean,
-        category: String
+        category: String,
+        color: String,
+        order: String
     ): Call<Images>
 
 }
@@ -35,14 +37,18 @@ internal class ImageRepositoryImpl(
         imageType: String,
         orientation: String,
         editorsChoice: Boolean,
-        category: String
+        category: String,
+        color: String,
+        order: String
     ) = api.getFilteredImages(
         key = key,
         query = query,
         imageType = imageType,
         orientation = orientation,
         editorsChoice = editorsChoice,
-        category = category
+        category = category,
+        color = color,
+        order = order
     )
 
 }

@@ -7,6 +7,8 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -26,11 +28,13 @@ import com.feature.videos.ui.PortraitVideoViewScreen
 import com.feature.videos.ui.VideoPlayer
 import com.feature.videos.ui.VideoViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.videoGraph(
     navController: NavController,
     context: Context,
     viewModel: VideoViewModel,
-    onClickDownload: (String, String) -> Long
+    onClickDownload: (String, String) -> Long,
+    modalBottomSheet: SheetState
 ) {
 
     val activity = context as Activity
@@ -68,7 +72,11 @@ fun NavGraphBuilder.videoGraph(
                             saveState = true
                         }
                     }
-                }
+                },
+                modalBottomSheet = modalBottomSheet,
+                filters = { viewModel.filter.value },
+                applyFilter = viewModel::appplyFilter,
+                resetFilter = viewModel::resetFilter
             )
         }
         composable(

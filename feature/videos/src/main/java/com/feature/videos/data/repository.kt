@@ -15,7 +15,9 @@ interface VideoRepository {
         key: String,
         q: String,
         videoType: String,
-        editorsChoice: Boolean
+        editorsChoice: Boolean,
+        category: String,
+        order: String
     ): Call<Videos>
 }
 
@@ -33,12 +35,16 @@ internal class VideoRepositoryImpl(
         key: String,
         q: String,
         videoType: String,
-        editorsChoice: Boolean
+        editorsChoice: Boolean,
+        category: String,
+        order: String
     ): Call<Videos> =
         api.getFilteredVideos(
             key = key,
             q = q,
             videoType = videoType,
-            editorsChoice = editorsChoice
+            editorsChoice = editorsChoice,
+            category = category,
+            order = order
         )
 }
